@@ -2,30 +2,35 @@ package com.simplerestapi.restapi.controller;
 
 import com.simplerestapi.restapi.model.Movie;
 import com.simplerestapi.restapi.repository.MovieRepository;
+import com.simplerestapi.restapi.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class MovieController {
 
     @Autowired
-    MovieRepository movieRepo;
+    MovieService movieService;
 
     @GetMapping("/movies")
     public List getMovies() {
-        return movieRepo.getAll();
+        return movieService.findAll();
+    }
+
+    @GetMapping("/movie/{id}")
+    public Movie getMovie(@PathVariable("id") Long id) {
+
+        return movieService.findById(id);
     }
 
     @PostMapping("/movie")
     public String createMovie(@Valid @RequestBody Movie movie) {
         try {
-            movieRepo.add(movie);
+            movieService.create(movie);
             return "Filme adicionado com sucesso";
         } catch(Exception e) {
             return "Erro!!!";
